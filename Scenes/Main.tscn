@@ -38,5 +38,6 @@ texture = ExtResource("4_v1gob")
 [node name="Cave" parent="." instance=ExtResource("5_pbw6q")]
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("player")]
+zoom = Vector2(0.5, 0.5)
 script = ExtResource("6_v1gob")
 player = NodePath("../Player")

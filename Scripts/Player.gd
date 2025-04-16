@@ -12,8 +12,9 @@ var speed: float = 500
 var jump: float = -750
 var draw_complete: bool = false
 var max_draw_strength: float = 2000
-var draw_strength: float
+var draw_strength: float = 0
 var trajectory_line: Line2D
+var draw_strength_threshold: float = 10
 
 func _ready():
 	trajectory_line = Line2D.new()
@@ -33,12 +34,15 @@ func _process(_delta):
 	# Apply gravity
 	velocity.y += ProjectSettings.get_setting("physics/2d/default_gravity") * _delta
 
-	move_and_slide()
+	
+	calc_draw_strength()
 
+	move_and_slide()
 	queue_redraw()
 
 func _draw():
-	draw_trajectory()
+	if draw_strength > draw_strength_threshold:
+		draw_trajectory()
 
 func _input(_event):
 	# Shoot
@@ -55,6 +59,18 @@ func _input(_event):
 	if Input.is_action_just_pressed("jump"):
 		velocity.y = jump
 
+func calc_draw_strength() -> void:
+	if ap.current_animation:
+		if ap.current_animation == "draw":
+			var p = ap.current_animation_position / ap.get_animation(ap.current_animation).length
+			if draw_complete:
+				draw_strength = max_draw_strength
+			else:
+				draw_strength = p * max_draw_strength
+		print(draw_strength)
+	else:
+		draw_strength = 0
+
 func set_draw_complete(value: bool) -> void:
 	draw_complete = value
 	ap.play("hold")
@@ -64,20 +80,7 @@ func shoot_arrow():
 	var new_arrow = arrow_scene.instantiate()
 	new_arrow.position += d * 100
 	add_child(new_arrow)
-
-	var p = ap.current_animation_position / ap.get_animation(ap.current_animation).length 
-
-	if draw_complete:
-		draw_strength = max_draw_strength
-	else:
-		draw_strength = p * max_draw_strength
-
 	new_arrow.fly(draw_strength, d)
-
-# func calc_trajectory():
-# 	var angle = global_position.angle_to_point(get_global_mouse_position())
-# 	print("angle: ", -rad_to_deg(angle))
-
 
 func get_forward_direction() -> Vector2:
 	return global_position.direction_to(get_global_mouse_position())
@@ -91,7 +94,7 @@ func draw_trajectory():
 	var gravity = ProjectSettings.get_setting("physics/2d/default_gravity") * 2
 	var drag: float = ProjectSettings.get_setting("physics/2d/default_linear_damp") * 2
 	var timestep:float = 0.02
-	var colors: Array = [Color.RED]
+	var colors: Array = [Color.WHITE]
 
 	for i:int in 70:
 		arrow_velocity.y += gravity * timestep
@@ -101,47 +104,7 @@ func draw_trajectory():
 		line_start = line_end
 
 
-func draw_line_global(point_a: Vector2, point_b: Vector2, color: Color, width: int = -1) -> void:
+func draw_line_global(point_a: Vector2, point_b: Vector2, color: Color, width: int = 5) -> void:
 	var a_local_offset:= point_a - global_position
 	var b_local_offset := point_b - global_position
 	draw_line(a_local_offset, b_local_offset, color, width) 
-
-# func calc_trajectory():
-# 	trajectory_line.clear_points()
-# 	trajectory_line.add_point(to_local(global_position))
-# 	for i in range(10):
-# 		var d = (get_global_mouse_position() - global_position).normalized()
-# 		var angle = atan2(d.y, d.x)
-# 		var x = global_position.x + ((draw_strength * ap.current_animation_position / ap.get_animation(ap.current_animation).length) 
-# 		* cos(angle) * i)
-
-# 		var y = global_position.y + (((draw_strength * ap.current_animation_position / ap.get_animation(ap.current_animation).length) 
-# 		* sin(angle) * i) - .5 * 9.81 * i * i)
-
-# 		var new_point: Vector2 = Vector2(x, y)
-# 		print("New point: ", new_point)
-# 		trajectory_line.add_point(new_point)
-# 		print("Updated TLPs: ", trajectory_line.points)
-# 	print(trajectory_line.points)
-
-# func calc_trajectory():
-# 	print("Calc T")
-
-# 	for i in range(10):
-
-# 		var d = (get_global_mouse_position() - global_position).normalized()
-# 		var angle = atan2(d.y, d.x)
-# 		var x = global_position.x + ((draw_strength * ap.current_animation_position / ap.get_animation(ap.current_animation).length) 
-# 		* cos(angle) * i)
-
-# 		var y = global_position.y + ((draw_strength * ap.current_animation_position / ap.get_animation(ap.current_animation).length) 
-# 		* sin(angle) * i)
-
-		
-# 		var line: Line2D = Line2D.new()
-# 		# add_child(line)
-# 		trajectory_line.points = PackedVector2Array([to_local(global_position), Vector2(x,y)])
-
-# 		print("Line gp: ", line.global_position)
-# 		print("Player gp: ", global_position)
-# 		print("Line points: ", line.points)
