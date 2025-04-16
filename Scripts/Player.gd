@@ -57,10 +57,16 @@ func shoot_arrow():
 	var draw_strength: float
 
 
+	print(bow.frame)
+	print("Length", ap.get_animation(ap.current_animation).length)
+
+	var p = ap.current_animation_position / ap.get_animation(ap.current_animation).length 
+
+
 	if draw_complete:
 		draw_strength = max_draw_strength
 	else:
-		draw_strength = ap.current_animation_position * max_draw_strength
+		draw_strength = p * max_draw_strength
 
 	print("Animation position: ", ap.current_animation_position)
 	print("Draw Strength: ", draw_strength)
