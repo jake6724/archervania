@@ -11,8 +11,7 @@ var health: float = 5
 var speed: float = 500
 var jump: float = -750
 var draw_complete: bool = false
-var draw_strength: float
-
+var max_draw_strength: float = 2000
 
 func _process(_delta):
 	# Aim bow
@@ -34,13 +33,12 @@ func _input(_event):
 	# Shoot
 	if Input.is_action_just_pressed("left_click"):
 		draw_complete = false
-		draw_strength = 700
 		ap.play("draw")
 
 	if Input.is_action_just_released("left_click"):
+		shoot_arrow()
 		ap.play("release")
 		ap.queue("RESET")
-		shoot_arrow()
 	
 	# Jump
 	if Input.is_action_just_pressed("jump"):
@@ -48,11 +46,18 @@ func _input(_event):
 
 func set_draw_complete(value: bool) -> void:
 	draw_complete = value
-	draw_strength = 1500
 	ap.play("hold")
 
 func shoot_arrow():
-	var new_arrow = arrow_scene.instantiate()
-	add_child(new_arrow)
 	var d = get_local_mouse_position().normalized()
+	var new_arrow = arrow_scene.instantiate()
+	new_arrow.position += d * 100
+	add_child(new_arrow)
+
+	var draw_strength: float
+	if draw_complete:
+		draw_strength = max_draw_strength
+	else:
+		draw_strength = ap.current_animation_position * max_draw_strength
+
 	new_arrow.fly(draw_strength, d)
