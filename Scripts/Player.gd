@@ -32,6 +32,8 @@ func _process(_delta):
 func _input(_event):
 	# Shoot
 	if Input.is_action_just_pressed("left_click"):
+		draw_complete = false
+		draw_strength = 700
 		ap.play("draw")
 	
 	if Input.is_action_pressed("left_click"):
