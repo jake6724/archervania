@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://dnkh4pf516yxa"]
+[gd_scene load_steps=7 format=3 uid="uid://dnkh4pf516yxa"]
 
 [ext_resource type="PackedScene" uid="uid://yvxuiqhhsdk" path="res://Scenes/Player.tscn" id="1_r150o"]
 [ext_resource type="Texture2D" uid="uid://cskspa0w08qa6" path="res://Art/BG3.png" id="2_rgh2o"]
@@ -6,7 +6,6 @@
 [ext_resource type="Texture2D" uid="uid://c4wspvupd7v7b" path="res://Art/BG1.png" id="4_v1gob"]
 [ext_resource type="PackedScene" uid="uid://dbm3oxxq7arbt" path="res://Scenes/Cave.tscn" id="5_pbw6q"]
 [ext_resource type="Script" uid="uid://c8wfb1leulns2" path="res://Scripts/Camera.gd" id="6_v1gob"]
-[ext_resource type="PackedScene" uid="uid://boe0j0ei5q7ka" path="res://Scenes/Arrow.tscn" id="7_jw32o"]
 
 [node name="Main" type="Node2D"]
 
@@ -41,6 +40,3 @@ texture = ExtResource("4_v1gob")
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("player")]
 script = ExtResource("6_v1gob")
 player = NodePath("../Player")
-
-[node name="Arrow" parent="." instance=ExtResource("7_jw32o")]
-position = Vector2(748, -171)

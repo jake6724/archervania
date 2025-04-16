@@ -31,9 +31,14 @@ func _process(_delta):
 		velocity.x = 0
 
 	# Apply gravity
-	velocity.y += 9.81
+	velocity.y += ProjectSettings.get_setting("physics/2d/default_gravity") * _delta
 
 	move_and_slide()
+
+	queue_redraw()
+
+func _draw():
+	draw_trajectory()
 
 func _input(_event):
 	# Shoot
@@ -67,15 +72,39 @@ func shoot_arrow():
 	else:
 		draw_strength = p * max_draw_strength
 
-	calc_trajectory()
 	new_arrow.fly(draw_strength, d)
 
-func calc_trajectory():
-	var angle = global_position.angle_to_point(get_global_mouse_position())
-	print("angle: ", -rad_to_deg(angle))
+# func calc_trajectory():
+# 	var angle = global_position.angle_to_point(get_global_mouse_position())
+# 	print("angle: ", -rad_to_deg(angle))
 
+
+func get_forward_direction() -> Vector2:
+	return global_position.direction_to(get_global_mouse_position())
 	
+func draw_trajectory():
+	# var arrow_velocity: Vector2 = draw_strength * get_local_mouse_position().normalized()
+	var arrow_velocity: Vector2 = draw_strength * get_forward_direction()
 
+	var line_start: Vector2 = global_position + get_forward_direction() * 100
+	var line_end: Vector2
+	var gravity = ProjectSettings.get_setting("physics/2d/default_gravity") * 2
+	var drag: float = ProjectSettings.get_setting("physics/2d/default_linear_damp") * 2
+	var timestep:float = 0.02
+	var colors: Array = [Color.RED]
+
+	for i:int in 70:
+		arrow_velocity.y += gravity * timestep
+		line_end = line_start + (arrow_velocity * timestep)
+		arrow_velocity = arrow_velocity * clampf(1.0 - drag * timestep, 0, 1)
+		draw_line_global(line_start, line_end, colors[0])
+		line_start = line_end
+
+
+func draw_line_global(point_a: Vector2, point_b: Vector2, color: Color, width: int = -1) -> void:
+	var a_local_offset:= point_a - global_position
+	var b_local_offset := point_b - global_position
+	draw_line(a_local_offset, b_local_offset, color, width) 
 
 # func calc_trajectory():
 # 	trajectory_line.clear_points()
