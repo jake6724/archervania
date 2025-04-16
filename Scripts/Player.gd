@@ -9,7 +9,7 @@ extends CharacterBody2D
 
 var health: float = 5
 var speed: float = 500
-var jump: float = -850
+var jump: float = -750
 var draw_complete: bool = false
 var draw_strength: float
 
@@ -36,33 +36,23 @@ func _input(_event):
 		draw_complete = false
 		draw_strength = 700
 		ap.play("draw")
-	
-	if Input.is_action_pressed("left_click"):
-		if draw_complete:
-			draw_strength = 1500
-			ap.play("hold")
 
 	if Input.is_action_just_released("left_click"):
 		ap.play("release")
 		ap.queue("RESET")
-
 		shoot_arrow()
 	
 	# Jump
 	if Input.is_action_just_pressed("jump"):
 		velocity.y = jump
 
-	if Input.is_action_just_pressed("x"):
-		pass
-		
-
 func set_draw_complete(value: bool) -> void:
 	draw_complete = value
+	draw_strength = 1500
+	ap.play("hold")
 
 func shoot_arrow():
 	var new_arrow = arrow_scene.instantiate()
 	add_child(new_arrow)
-
 	var d = get_local_mouse_position().normalized()
-
 	new_arrow.fly(draw_strength, d)

@@ -1,7 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://dbm3oxxq7arbt"]
+[gd_scene load_steps=2 format=4 uid="uid://dbm3oxxq7arbt"]
 
 [ext_resource type="TileSet" uid="uid://0m00ucc5ylkn" path="res://Data/cave_tileset.tres" id="1_fvrk5"]
 
 [node name="Cave" type="TileMapLayer"]
 texture_filter = 1
+tile_map_data = PackedByteArray("AAAKAAcAAAAIAAAAAAALAAcAAAALAAAAAAALAAgAAAALAAMAAAAKAAgAAAAJAAEAAAAJAAgAAAAIAAAAAAAJAAkAAAAIAAMAAAAKAAkAAAALAAMAAAAOAAcAAAAAAAAAAAAOAAgAAAAEAAMAAAAPAAgAAAADAAMAAAAOAAkAAAALAAMAAAANAAkAAAAIAAMAAAANAAgAAAAIAAAAAAA=")
 tile_set = ExtResource("1_fvrk5")
