@@ -55,9 +55,14 @@ func shoot_arrow():
 	add_child(new_arrow)
 
 	var draw_strength: float
+
+
 	if draw_complete:
 		draw_strength = max_draw_strength
 	else:
 		draw_strength = ap.current_animation_position * max_draw_strength
+
+	print("Animation position: ", ap.current_animation_position)
+	print("Draw Strength: ", draw_strength)
 
 	new_arrow.fly(draw_strength, d)
