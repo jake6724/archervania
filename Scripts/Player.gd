@@ -9,6 +9,7 @@ extends CharacterBody2D
 
 var health: float = 5
 var speed: float = 500
+var jump: float = -850
 var draw_complete: bool = false
 var draw_strength: float
 
@@ -49,7 +50,7 @@ func _input(_event):
 	
 	# Jump
 	if Input.is_action_just_pressed("jump"):
-		velocity.y = -850
+		velocity.y = jump
 
 	if Input.is_action_just_pressed("x"):
 		pass
