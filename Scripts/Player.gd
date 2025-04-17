@@ -9,18 +9,21 @@ extends CharacterBody2D
 
 var health: float = 5
 var speed: float = 500
-var jump: float = -750
+var jump: float = -550
+var jump_count: int = 0
 var draw_complete: bool = false
-var max_draw_strength: float = 2000
+var base_draw_strength: float = 1500
+var max_draw_strength: float = 1500
 var draw_strength: float = 0
-var trajectory_line: Line2D
 var draw_strength_threshold: float = 10
+var trajectory_line: Line2D
 
 func _ready():
 	trajectory_line = Line2D.new()
 	add_child(trajectory_line)
 
 func _process(_delta):
+
 	# Aim bow
 	bow.look_at(get_global_mouse_position())
 
@@ -32,9 +35,14 @@ func _process(_delta):
 		velocity.x = 0
 
 	# Apply gravity
-	velocity.y += ProjectSettings.get_setting("physics/2d/default_gravity") * _delta
-
+	velocity.y += 9.81
+	# velocity.y += ProjectSettings.get_setting("physics/2d/default_gravity") * _delta
 	
+	# Reset jumps
+	# if is_on_floor():
+	# 	print("Reset floor")
+	# 	jump_count = 0
+
 	calc_draw_strength()
 
 	move_and_slide()
@@ -44,30 +52,38 @@ func _draw():
 	if draw_strength > draw_strength_threshold:
 		draw_trajectory()
 
-func _input(_event):
+func _input(event):
 	# Shoot
-	if Input.is_action_just_pressed("left_click"):
+	if event.is_action_pressed("left_click"):
 		draw_complete = false
 		ap.play("draw")
 
-	if Input.is_action_just_released("left_click"):
+	if event.is_action_released("left_click"):
+		print("LEft click release")
 		shoot_arrow()
+		draw_strength = 0
 		ap.play("release")
 		ap.queue("RESET")
+		queue_redraw()
 	
 	# Jump
-	if Input.is_action_just_pressed("jump"):
-		velocity.y = jump
+	if event.is_action_pressed("jump"):
+
+		if is_on_floor():
+			jump_count = 0
+
+		if jump_count == 0:
+			jump_count += 1
+			velocity.y = jump
 
 func calc_draw_strength() -> void:
 	if ap.current_animation:
 		if ap.current_animation == "draw":
 			var p = ap.current_animation_position / ap.get_animation(ap.current_animation).length
 			if draw_complete:
-				draw_strength = max_draw_strength
+				draw_strength = base_draw_strength + max_draw_strength
 			else:
-				draw_strength = p * max_draw_strength
-		print(draw_strength)
+				draw_strength = base_draw_strength + (p * max_draw_strength)
 	else:
 		draw_strength = 0
 
@@ -86,7 +102,6 @@ func get_forward_direction() -> Vector2:
 	return global_position.direction_to(get_global_mouse_position())
 	
 func draw_trajectory():
-	# var arrow_velocity: Vector2 = draw_strength * get_local_mouse_position().normalized()
 	var arrow_velocity: Vector2 = draw_strength * get_forward_direction()
 
 	var line_start: Vector2 = global_position + get_forward_direction() * 100
