@@ -9,7 +9,7 @@ extends CharacterBody2D
 
 var health: float = 5
 var speed: float = 500
-var jump: float = -550
+var jump: float = -750
 var jump_count: int = 0
 var draw_complete: bool = false
 var base_draw_strength: float = 1500
@@ -37,11 +37,6 @@ func _process(_delta):
 	# Apply gravity
 	velocity.y += 9.81
 	# velocity.y += ProjectSettings.get_setting("physics/2d/default_gravity") * _delta
-	
-	# Reset jumps
-	# if is_on_floor():
-	# 	print("Reset floor")
-	# 	jump_count = 0
 
 	calc_draw_strength()
 
@@ -59,7 +54,6 @@ func _input(event):
 		ap.play("draw")
 
 	if event.is_action_released("left_click"):
-		print("LEft click release")
 		shoot_arrow()
 		draw_strength = 0
 		ap.play("release")
