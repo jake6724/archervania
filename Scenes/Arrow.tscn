@@ -1,12 +1,21 @@
-[gd_scene load_steps=3 format=3 uid="uid://boe0j0ei5q7ka"]
+[gd_scene load_steps=4 format=3 uid="uid://boe0j0ei5q7ka"]
 
 [ext_resource type="Script" uid="uid://dnncg7hiuicgu" path="res://Scripts/Arrow.gd" id="1_7v023"]
 [ext_resource type="Texture2D" uid="uid://5wc21ah1l368" path="res://Art/arrow.png" id="2_7v023"]
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_7v023"]
+radius = 6.0
+height = 52.0
+
 [node name="Arrow" type="RigidBody2D"]
+collision_mask = 4
 script = ExtResource("1_7v023")
 metadata/_custom_type_script = "uid://dnncg7hiuicgu"
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 1
 texture = ExtResource("2_7v023")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_7v023")
